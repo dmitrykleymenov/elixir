@@ -8,7 +8,7 @@ import Inspect.Algebra
 alias Code.Identifier
 
 defprotocol Inspect do
-  @moduledoc """
+  @moduledoc ~S"""
   The `Inspect` protocol converts an Elixir data structure into an
   algebra document.
 
@@ -81,18 +81,18 @@ defprotocol Inspect do
       end
 
       inspect(%User{id: 1, name: "Jane", address: "Earth"})
-      #=> #User<id: 1, name: "Jane", ...>
+      #=> "#User<id: 1, name: \"Jane\", ...>"
 
   If you use only the `:optional` option, the struct will still be
   printed as a valid struct.
 
       defmodule Point do
-        @derive {Inspect, optional: [:z]}
+        @derive {Inspect, optional: [:x, :z]}
         defstruct [x: 0, y: 0, z: 0]
       end
 
       inspect(%Point{x: 1})
-      %Point{x: 1, y: 0}
+      #=> "%Point{x: 1, y: 0}"
 
   ## Custom implementation
 
@@ -117,7 +117,8 @@ defprotocol Inspect do
   The [`concat/1`](`Inspect.Algebra.concat/1`) function comes from
   `Inspect.Algebra` and it concatenates algebra documents together.
   In the example above it is concatenating the string `"MapSet.new("`,
-  the document returned by `Inspect.Algebra.to_doc/2`, and the final
+  the document returned by `Inspect.List.inspect/2` with converted
+  to list `map_set` as the first argument, and the final
   string `")"`. Therefore, the MapSet with the numbers 1, 2, and 3
   will be printed as:
 
